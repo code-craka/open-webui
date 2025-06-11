@@ -1,0 +1,31 @@
+/* static/themes/custom-theme.css */
+    :root {
+      /* Default to light theme variables */
+      --color-gray-50: #EFF6FF;
+      --color-gray-100: #EFF6FF; /* Adjusted for less variety initially */
+      --color-gray-200: #DBEAFE;
+      --color-gray-300: #DBEAFE; /* Adjusted */
+      --color-gray-400: #BFDBFE;
+      --color-gray-500: #93C5FD;
+      --color-gray-600: #3B82F6; /* Text/accent */
+      --color-gray-700: #2563EB; /* Text/accent */
+      --color-gray-800: #1E40AF; /* Darker text/elements */
+      --color-gray-850: #1E3A8A;
+      --color-gray-900: #1E3A8A; /* Darkest text/elements */
+      --color-gray-950: #1C3373;
+    }
+
+    html.dark {
+      --color-gray-50: #E2E8F0; /* Light text/elements */
+      --color-gray-100: #E2E8F0; /* Adjusted */
+      --color-gray-200: #CBD5E1;
+      --color-gray-300: #94A3B8; /* Adjusted */
+      --color-gray-400: #64748B;
+      --color-gray-500: #475569;
+      --color-gray-600: #334155; /* Mid backgrounds */
+      --color-gray-700: #334155; /* Adjusted */
+      --color-gray-800: #1E293B; /* Primary background */
+      --color-gray-850: #1E293B;
+      --color-gray-900: #0F172A; /* Darker primary background */
+      --color-gray-950: #0F172A;
+    }

@@ -7,20 +7,21 @@
 		<link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
 		<link rel="shortcut icon" href="/static/favicon.ico" />
 		<link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png" />
-		<meta name="apple-mobile-web-app-title" content="Open WebUI" />
+		<meta name="apple-mobile-web-app-title" content="My Custom WebUI" />
 
 		<link rel="manifest" href="/manifest.json" crossorigin="use-credentials" />
+		<link rel="stylesheet" href="/themes/custom-theme.css" />
 		<meta
 			name="viewport"
 			content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
 		/>
-		<meta name="theme-color" content="#171717" />
+		<meta name="theme-color" content="#1E293B" />
 		<meta name="robots" content="noindex,nofollow" />
-		<meta name="description" content="Open WebUI" />
+		<meta name="description" content="My Custom WebUI" />
 		<link
 			rel="search"
 			type="application/opensearchdescription+xml"
-			title="Open WebUI"
+			title="My Custom WebUI"
 			href="/opensearch.xml"
 		/>
 		<script src="/static/loader.js" defer></script>
@@ -37,48 +38,57 @@
 				const metaThemeColorTag = document.querySelector('meta[name="theme-color"]');
 				const prefersDarkTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
+				// Set default theme to 'custom-system' if nothing is set
 				if (!localStorage?.theme) {
-					localStorage.theme = 'system';
+					localStorage.theme = 'custom-system'; // New default
 				}
 
-				if (localStorage.theme === 'system') {
+				// Apply the theme
+				let currentTheme = localStorage.theme;
+				let isDark = prefersDarkTheme;
+
+				if (currentTheme === 'custom-system') {
+					// Use system preference
 					document.documentElement.classList.add(prefersDarkTheme ? 'dark' : 'light');
-					metaThemeColorTag.setAttribute('content', prefersDarkTheme ? '#171717' : '#ffffff');
-				} else if (localStorage.theme === 'oled-dark') {
-					document.documentElement.style.setProperty('--color-gray-800', '#101010');
-					document.documentElement.style.setProperty('--color-gray-850', '#050505');
-					document.documentElement.style.setProperty('--color-gray-900', '#000000');
-					document.documentElement.style.setProperty('--color-gray-950', '#000000');
-					document.documentElement.classList.add('dark');
-					metaThemeColorTag.setAttribute('content', '#000000');
-				} else if (localStorage.theme === 'light') {
+					metaThemeColorTag.setAttribute('content', prefersDarkTheme ? '#1E293B' : '#DBEAFE');
+				} else if (currentTheme === 'custom-light') {
+					isDark = false;
 					document.documentElement.classList.add('light');
-					metaThemeColorTag.setAttribute('content', '#ffffff');
-				} else if (localStorage.theme === 'her') {
+					document.documentElement.classList.remove('dark');
+					metaThemeColorTag.setAttribute('content', '#DBEAFE');
+				} else if (currentTheme === 'custom-dark') {
+					isDark = true;
 					document.documentElement.classList.add('dark');
-					document.documentElement.classList.add('her');
-					metaThemeColorTag.setAttribute('content', '#983724');
+					document.documentElement.classList.remove('light');
+					metaThemeColorTag.setAttribute('content', '#1E293B');
 				} else {
-					document.documentElement.classList.add('dark');
-					metaThemeColorTag.setAttribute('content', '#171717');
+					// Fallback to custom-system if an old/unknown theme is stored
+					localStorage.theme = 'custom-system';
+					document.documentElement.classList.add(prefersDarkTheme ? 'dark' : 'light');
+					metaThemeColorTag.setAttribute('content', prefersDarkTheme ? '#1E293B' : '#DBEAFE');
 				}
 
+				// Listener for system theme changes
 				window.matchMedia('(prefers-color-scheme: dark)').addListener((e) => {
-					if (localStorage.theme === 'system') {
+					if (localStorage.theme === 'custom-system') {
 						if (e.matches) {
 							document.documentElement.classList.add('dark');
 							document.documentElement.classList.remove('light');
-							metaThemeColorTag.setAttribute('content', '#171717');
+							metaThemeColorTag.setAttribute('content', '#1E293B');
 						} else {
 							document.documentElement.classList.add('light');
 							document.documentElement.classList.remove('dark');
-							metaThemeColorTag.setAttribute('content', '#ffffff');
+							metaThemeColorTag.setAttribute('content', '#DBEAFE');
 						}
 					}
 				});
 
+				// Splash screen image update logic (keep as is, but ensure it respects the new dark/light mode)
+				// The existing splash screen logic should work fine as it checks for the 'dark' class.
 				function setSplashImage() {
 					const logo = document.getElementById('logo');
+					// Check if logo element exists before proceeding
+					if (!logo) return;
 					const isDarkMode = document.documentElement.classList.contains('dark');
 
 					if (isDarkMode) {
@@ -87,21 +97,33 @@
 
 						darkImage.onload = () => {
 							logo.src = '/static/splash-dark.png';
-							logo.style.filter = ''; // Ensure no inversion is applied if splash-dark.png exists
+							logo.style.filter = '';
 						};
 
 						darkImage.onerror = () => {
-							logo.style.filter = 'invert(1)'; // Invert image if splash-dark.png is missing
+							// If splash-dark.png is missing (e.g. user hasn't replaced placeholder)
+							// and splash.png is also a placeholder, this might not look great.
+							// For now, keep existing logic.
+							logo.style.filter = 'invert(1)';
 						};
+					} else {
+						// Ensure light mode splash is set and no filter applied
+						logo.src = '/static/splash.png';
+						logo.style.filter = '';
 					}
 				}
 
-				// Runs after classes are assigned
-				window.onload = setSplashImage;
+				// Check if DOM is already loaded, otherwise wait for window.onload
+				if (document.readyState === 'complete') {
+					setSplashImage();
+				} else {
+					window.onload = setSplashImage;
+				}
+
 			})();
 		</script>
 
-		<title>Open WebUI</title>
+		<title>My Custom WebUI</title>
 
 		%sveltekit.head%
 	</head>
